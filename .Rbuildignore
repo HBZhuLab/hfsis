@@ -1,0 +1,14 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^README\.Rmd$
+^README\.md$
+^README\.html$
+^NEWS\.md$
+^cran-comments\.md$
+^_pkgdown\.yml$
+^\.github$
+^data-raw$
+^LICENSE\.md$
+^docs$
+^CITATION\.cff$
+^hfsis_.*\.tar\.gz$

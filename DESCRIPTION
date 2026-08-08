@@ -1,0 +1,30 @@
+Package: hfsis
+Title: Adaptive Spot Support Screening for High-Frequency Regression
+Version: 0.1.0
+Authors@R: person("Haibin", "Zhu", email = "haibinzhu@jnu.edu.cn",
+    role = c("aut", "cre"))
+Description: Implements adaptive variable screening for synchronous,
+    equally spaced high-frequency regression increments. The package provides
+    coordinatewise jump truncation, marginal spot independence screening
+    (M-SIS), and partial-residual spot iterative screening (PR-SISIS) with
+    active-set adaptive window selection. Correlation columns required by
+    PR-SISIS are computed on demand as the active set grows.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Depends: R (>= 4.2.0)
+Imports:
+    graphics,
+    stats,
+    utils
+Suggests:
+    covr,
+    knitr,
+    markdown,
+    pkgdown,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    withr
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1

@@ -1,0 +1,55 @@
+---
+title: "Method and implementation"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{Method and implementation}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+At the target time, the standardized spot quantities obey
+
+$$
+r_\tau = R_\tau \theta_\tau.
+$$
+
+The support of the marginal vector $r_\tau$ can differ from the regression
+support of $\theta_\tau$. Correlated active coordinates with opposing
+coefficients may cancel marginally, while an inactive correlated surrogate may
+have a large marginal score.
+
+For every candidate forward window, hfsis computes the marginal correlation
+vector and the diagonal variance summaries after coordinatewise truncation.
+M-SIS selects its window from the marginal vector alone.
+
+PR-SISIS starts from the empty active set. At each update, it compares the
+marginal vector together with the correlation columns associated with the
+current active set. New columns are computed on demand and cached. The selected
+window can therefore change across updates. Partial-residual coefficients are
+computed with an ordinary linear solve; a singular active block terminates the
+path.
+
+```{r}
+library(hfsis)
+data(hf_sis_example)
+dat <- hf_sis_example$data
+inputs <- prepare_hfsis(
+  as.matrix(dat[hf_sis_example$x_names]),
+  dat[[hf_sis_example$response]],
+  hf_sis_example$target_index,
+  hfsis_control(
+    hf_sis_example$windows,
+    threshold_multiplier = 4,
+    threshold_exponent = 0.47
+  )
+)
+summary(m_sis(inputs, list_size = 5L))
+summary(pr_sisis(inputs, model_cap = 5L, block_size = 2L))
+```
+
+The full-sample bipower scale determines the coordinatewise truncation
+thresholds. Variance floors are used only during correlation normalization.

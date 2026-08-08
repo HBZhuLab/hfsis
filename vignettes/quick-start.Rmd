@@ -1,0 +1,58 @@
+---
+title: "Quick start"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{Quick start}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 7, fig.height = 4)
+```
+
+hfsis expects a numeric matrix of synchronous, equally spaced covariate
+increments and a numeric response-increment vector. The target index is the
+first row used by every forward candidate window.
+
+```{r}
+library(hfsis)
+data(hf_sis_example)
+dat <- hf_sis_example$data
+x <- as.matrix(dat[hf_sis_example$x_names])
+y <- dat[[hf_sis_example$response]]
+
+control <- hfsis_control(
+  windows = hf_sis_example$windows,
+  truncation = "bipower"
+)
+inputs <- prepare_hfsis(x, y, hf_sis_example$target_index, control)
+inputs
+```
+
+The prepared object stores the common truncated local data and marginal window
+summaries. M-SIS uses the marginal-only window selector. PR-SISIS reselects the
+window at each update after incorporating the correlation columns associated
+with the current active set.
+
+```{r}
+m_fit <- m_sis(inputs, list_size = 5)
+pr_fit <- pr_sisis(inputs, model_cap = 5L, block_size = 2L)
+selected_variables(m_fit)
+selected_variables(pr_fit)
+screen_ranking(m_fit)
+screen_path(pr_fit)
+compare_screens(m_fit, pr_fit)
+```
+
+Use score, window, and path plots for different diagnostics.
+
+```{r}
+plot(m_fit, type = "scores", top = 10)
+plot(m_fit, type = "window")
+plot(pr_fit, type = "window")
+plot(pr_fit, type = "path")
+```
+
+Rows with missing or infinite values are rejected rather than dropped or
+imputed. Inputs must be increments or returns, not price levels.

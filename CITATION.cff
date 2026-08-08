@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use hfsis, please cite the software and accompanying manuscript."
+title: "hfsis: Adaptive Spot Support Screening for High-Frequency Regression"
+version: 0.1.0
+type: software
+authors:
+  - family-names: Zhu
+    given-names: Haibin
+    email: haibinzhu@jnu.edu.cn
+license: MIT
+date-released: 2026-08-04
+preferred-citation:
+  type: article
+  title: "Ultra-high-dimensional spot support screening in continuous-time regression"
+  authors:
+    - family-names: Zhu
+      given-names: Haibin
+  year: 2026

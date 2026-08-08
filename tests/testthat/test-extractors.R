@@ -1,0 +1,21 @@
+test_that("extractors return stable base objects", {
+  fits <- example_fits()
+  expect_type(selected_variables(fits$m), "character")
+  expect_s3_class(screen_scores(fits$m), "data.frame")
+  expect_s3_class(screen_ranking(fits$m), "data.frame")
+  expect_equal(nrow(screen_scores(fits$m)), 25L)
+  expect_equal(nrow(screen_ranking(fits$m)), 25L)
+  expect_equal(selected_window(fits$m), fits$m$selected_k)
+  expect_equal(nrow(screen_path(fits$m)), 1L)
+  expect_equal(screen_path(fits$m)$model_size, length(fits$m$selected))
+
+  expect_equal(nrow(screen_ranking(fits$pr)), fits$pr$inputs_summary$p)
+  expect_equal(nrow(screen_scores(fits$pr, iteration = 1L)), 25L)
+  expect_equal(screen_ranking(fits$pr, iteration = 1L)$variable,
+    fits$pr$ranking_history[[1L]])
+  expect_identical(screen_path(fits$pr), fits$pr$path)
+  expect_equal(selected_window(fits$pr), fits$pr$final_k)
+  expect_equal(selected_window(fits$pr, 1L), fits$pr$iteration_windows[1L])
+  expect_error(screen_scores(fits$pr, iteration = 99), "between 1")
+  expect_error(selected_variables(list()), "hfsis_fit")
+})

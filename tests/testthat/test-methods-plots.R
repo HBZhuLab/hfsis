@@ -1,0 +1,26 @@
+test_that("fit methods are compact and plotting is non-mutating", {
+  fits <- example_fits()
+  expect_output(print(fits$m), "M-SIS fit")
+  expect_output(print(fits$pr), "singularity")
+  expect_s3_class(summary(fits$m), "summary_hfsis_fit")
+  expect_output(print(summary(fits$pr)), "Summary of PR-SISIS")
+
+  file <- tempfile(fileext = ".pdf")
+  grDevices::pdf(file)
+  expect_identical(plot(fits$m, type = "scores"), fits$m)
+  expect_identical(plot(fits$m, type = "window"), fits$m)
+  expect_identical(plot(fits$m, type = "path"), fits$m)
+  expect_identical(plot(fits$pr, type = "window"), fits$pr)
+  expect_identical(plot(fits$pr, type = "path"), fits$pr)
+  comparison <- compare_screens(fits$m, fits$pr)
+  expect_identical(plot(comparison), comparison)
+  metadata <- data.frame(variable = fits$m$inputs_summary$variable_names,
+    cluster = rep(letters[1:5], each = 5))
+  frequency <- selection_frequency(list(fits$m, fits$pr), metadata = metadata)
+  expect_identical(plot_selection_frequency(
+    frequency, top = 5, group = "cluster", methods = "M-SIS"), frequency)
+  share <- cluster_share(list(fits$m, fits$pr), metadata)
+  expect_identical(plot_cluster_share(share), share)
+  grDevices::dev.off()
+  expect_true(file.exists(file))
+})

@@ -1,0 +1,38 @@
+url: ~
+template:
+  bootstrap: 5
+reference:
+  - title: Core screening
+    contents:
+      - hfsis_control
+      - prepare_hfsis
+      - m_sis
+      - pr_sis
+      - pr_sisis
+  - title: Results and extraction
+    contents:
+      - selected_variables
+      - screen_scores
+      - screen_ranking
+      - selected_window
+      - screen_path
+      - compare_screens
+      - summary.hfsis_fit
+      - plot.hfsis_fit
+  - title: Repeated screening
+    contents:
+      - selection_frequency
+      - plot_selection_frequency
+      - cluster_share
+      - plot_cluster_share
+  - title: Data
+    contents:
+      - hf_sis_example
+      - hf_sis_panel_example
+articles:
+  - title: Articles
+    navbar: ~
+    contents:
+      - quick-start
+      - method-and-implementation
+      - repeated-screening

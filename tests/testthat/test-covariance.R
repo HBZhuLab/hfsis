@@ -1,0 +1,21 @@
+test_that("variance floor prevents division by zero", {
+  covariance <- diag(c(0, 2, 3))
+  normalized <- hfsis:::.normalize_augmented_correlation(covariance, 1e-12)
+  expect_true(all(is.finite(normalized$correlation)))
+  expect_true(normalized$floor_active[1L])
+  expect_equal(normalized$correlation[1L, 1L], 0)
+})
+
+test_that("positive coordinate scaling preserves unfloored summaries", {
+  set.seed(91)
+  x <- matrix(rnorm(120 * 4), 120, 4)
+  y <- rnorm(120)
+  control <- hfsis_control(c(16L, 32L), truncation = "none")
+  first <- prepare_hfsis(x, y, 20L, control)
+  scales <- c(2, 0.5, 3, 1.5)
+  second <- prepare_hfsis(sweep(x, 2L, scales, "*"), y * 4, 20L, control)
+  expect_equal(first$r_by_window, second$r_by_window, tolerance = 1e-12)
+  first_column <- hfsis:::.compute_active_column(first, 2L)
+  second_column <- hfsis:::.compute_active_column(second, 2L)
+  expect_equal(first_column, second_column, tolerance = 1e-12)
+})

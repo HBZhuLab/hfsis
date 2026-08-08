@@ -1,0 +1,56 @@
+---
+title: "Repeated screening"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{Repeated screening}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 7, fig.height = 8)
+```
+
+Fit each session independently, using a stable variable universe and order.
+
+```{r}
+library(hfsis)
+data(hf_sis_panel_example)
+
+fits <- unlist(lapply(hf_sis_panel_example$sessions, function(dat) {
+  prepared <- prepare_hfsis(
+    as.matrix(dat[hf_sis_panel_example$x_names]),
+    dat[[hf_sis_panel_example$response]],
+    hf_sis_panel_example$target_index,
+    hfsis_control(hf_sis_panel_example$windows)
+  )
+  list(
+    m_sis(prepared, list_size = 5),
+    pr_sisis(prepared, model_cap = 5L, block_size = 2L)
+  )
+}), recursive = FALSE)
+
+frequency <- selection_frequency(
+  fits, metadata = hf_sis_panel_example$metadata
+)
+frequency[order(frequency$method, -frequency$frequency), ][1:12, ]
+shares <- cluster_share(fits, hf_sis_panel_example$metadata)
+shares
+```
+
+```{r}
+plot_selection_frequency(frequency, top = 8, group = "cluster")
+plot_cluster_share(shares)
+comparison <- compare_screens(fits[[1]], fits[[2]])
+plot(comparison)
+```
+
+These summaries describe recurrence and composition only. A frequency is not a
+support probability or significance measure, and real data do not reveal the
+true support.
+
+To adapt this workflow to the public High-Frequency Factor Zoo data, download
+the data from https://www.sakethaleti.com/data, form synchronous equally spaced
+factor and response returns, preserve a fixed metadata order, and fit each
+complete day separately. The package deliberately does not redistribute those
+data; users must review their source terms and data quality themselves.

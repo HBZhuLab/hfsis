@@ -1,0 +1,18 @@
+citHeader("To cite hfsis, cite both the manuscript and the software:")
+
+c(
+  bibentry(
+    bibtype = "Unpublished",
+    title = "Ultra-high-dimensional spot support screening in continuous-time regression",
+    author = person("Haibin", "Zhu"),
+    year = "2026",
+    note = "Manuscript"
+  ),
+  bibentry(
+    bibtype = "Manual",
+    title = "hfsis: Adaptive Spot Support Screening for High-Frequency Regression",
+    author = person("Haibin", "Zhu"),
+    year = "2026",
+    note = "R package version 0.1.0"
+  )
+)
