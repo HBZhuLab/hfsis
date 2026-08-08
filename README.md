@@ -18,6 +18,11 @@ install.packages(
   type = "source"
 )
 ```
+or
+
+```r
+devtools::install_github("HBZhuLab/hfsis")
+```
 
 ## Quick start: M-SIS and PR-SISIS
 
